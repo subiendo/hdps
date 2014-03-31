@@ -1,29 +1,34 @@
 package expevaluator;
 
-public class Expression {
+interface Expression {
 
-    private char Operation;
+    double evaluate();
+}
+
+class Constant implements Expression {
+
     private double value;
-    private Expression left;
-    private Expression right;
 
-    public Expression(char Operation, double value) {
-        this.Operation = Operation;
+    public Constant(double value) {
         this.value = value;
     }
 
-    public Expression(char Operation, Expression left, Expression right) {
-        this.Operation = Operation;
-        this.left = left;
-        this.right = right;
-    }
-    
-    
-    
+    @Override
     public double evaluate() {
-        switch (Operation) {
-            case '#':
-                return value;
+        return value;
+    }
+
+}
+
+class Operation implements Expression {
+
+    private char operation;
+    private Expression left;
+    private Expression right;
+
+    @Override
+    public double evaluate() {
+        switch (operation) {
             case '+':
                 return left.evaluate() + right.evaluate();
             case '*':
@@ -31,4 +36,5 @@ public class Expression {
         }
         return 0;
     }
+
 }
