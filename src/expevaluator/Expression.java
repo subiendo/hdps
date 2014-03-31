@@ -1,40 +1,69 @@
 package expevaluator;
 
-interface Expression {
+interface Expression<T> {
 
-    double evaluate();
+    T evaluate();
 }
 
-class Constant implements Expression {
+class Constant<T> implements Expression{
 
-    private double value;
+    private final T value;
 
-    public Constant(double value) {
+    public Constant(T value) {
         this.value = value;
     }
 
     @Override
-    public double evaluate() {
+    public T evaluate() {
         return value;
     }
 
 }
 
-class Operation implements Expression {
+abstract class Operation<T> implements Expression {
 
-    private char operation;
-    private Expression left;
-    private Expression right;
+    public T left;
+    public T right;
 
     @Override
-    public double evaluate() {
-        switch (operation) {
-            case '+':
-                return left.evaluate() + right.evaluate();
-            case '*':
-                return left.evaluate() * right.evaluate();
-        }
-        return 0;
+    public abstract T evaluate();
+
+}
+
+class Addition<T> extends Operation {
+
+    public Addition(Constant left, Constant right) {
+        super.left =  left.evaluate();
+        super.right = right.evaluate();
+    }
+
+    @Override
+    public T evaluate() {
+        return (T) new IntIntAddition().evaluate((Integer)super.left,(Integer)super.right);
+    }
+    
+}
+
+class IntIntAddition {
+
+    public IntIntAddition() {
+    }
+
+    public Integer evaluate(Integer left, Integer right) {
+        return left + right;
     }
 
 }
+
+/*class Multiplication extends Operation{
+
+ public Multiplication(Constant left, Constant right) {
+ super.left = left;
+ super.right = right;
+ }
+
+ @Override
+ public Object evaluate() {
+ return left.evaluate() * right.evaluate();
+ }
+ }*/
